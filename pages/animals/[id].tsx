@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAnimalByIdQuery } from "../../types/cms";
 
@@ -11,8 +10,6 @@ const AnimalPage: NextPage = () => {
       id: "" + query.id,
     },
   });
-
-  console.log(data);
 
   if (loading || !data) {
     return <div>Loading...</div>;
