@@ -1,0 +1,11 @@
+query AnimalByID($id: ID) {
+  animal(id: $id) {
+    data {
+      id
+      attributes {
+        name
+        leg_count
+      }
+    }
+  }
+}

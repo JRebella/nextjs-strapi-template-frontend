@@ -1,0 +1,18 @@
+query AnimalsByType {
+  animalTypes {
+    data {
+      id
+      attributes {
+        animals {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        name
+      }
+    }
+  }
+}

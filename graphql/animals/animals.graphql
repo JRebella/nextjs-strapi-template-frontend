@@ -1,0 +1,18 @@
+query Animals {
+  animals {
+    data {
+      id
+      attributes {
+        name
+        leg_count
+        animal_type {
+          data {
+            attributes {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
