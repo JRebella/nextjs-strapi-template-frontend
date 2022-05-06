@@ -24,7 +24,8 @@ const Home: NextPage<{ animalsByTypeQuery: AnimalsByTypeQuery }> = ({
       <main className={styles.main}>
         <h1 className={styles.title}>Next.js + Strapi template</h1>
 
-        <ul>
+        <ul className="p-8 shadow-lg border-2 m-4">
+          <h2 className="text-xl font-bold">Tech stack</h2>
           <li>Next.js</li>
           <li>Typescript</li>
           <li>Strapi v4</li>
