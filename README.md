@@ -1,34 +1,71 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next.js + Strapi template
 
-## Getting Started
+A Next.js app template that reads data from a graphQL API in a headless CMS (Strapi)
+[Live demo](https://nextjs-strapi-template-frontend.vercel.app/)
 
-First, run the development server:
+Built for [Strapi backend](https://github.com/JRebella/nextjs-strapi-template-backend) but could be used with any graphQL backend
 
-```bash
-npm run dev
-# or
-yarn dev
+By [Juan Rebella](https://www.juanrebella.dev/)
+
+## Tech Stack
+
+- [Next.js](https://nextjs.org/)
+- [Apollo Client](https://www.apollographql.com/) (GraphQL client)
+- [Typescript](https://www.typescriptlang.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [graphql-codegen](https://www.graphql-code-generator.com/) for generating TS types by reading metadata from the graphQL API
+
+## Run locally
+
+    yarn install
+
+Create a `.env.local` file at the root of the project with the route to your graphQL instance (use .env.local.example as a guide)
+
+```.env
+NEXT_PUBLIC_CMS_ROUTE='http://localhost:1337/graphql'
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run your [Strapi instance](https://github.com/JRebella/nextjs-strapi-template-backend), then
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+    yarn dev
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Type generation
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Define your queries in `./graphql/*/[yourQuery].graphql`
 
-## Learn More
+Verify that `schema` contains the route to your graphQL instance in the `codegen.yml` config file
 
-To learn more about Next.js, take a look at the following resources:
+    schema: "http://localhost:1337/graphql"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Run
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+    yarn generate-cms-types
 
-## Deploy on Vercel
+This will reach out to your remote graphQL instance and read its metadata generate a `types/cms.tsx` file. This file will contain type definitions based on your graphQL model and the queries you previously defined. It will also include helper hooks to directly use your queries directly in your React components
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Example of generated hook
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```tsx
+export function useAnimalsQuery(
+  baseOptions?: Apollo.QueryHookOptions<AnimalsQuery, AnimalsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<AnimalsQuery, AnimalsQueryVariables>(AnimalsDocument, options);
+}
+```
+
+Then use the hook directly in a React component
+
+```tsx
+import { useAnimalByIdQuery } from "../../types/cms";
+
+const AnimalPage: NextPage = () => {
+  const { data, loading } = useAnimalByIdQuery({
+    variables: {
+      id: query.id,
+    },
+  });
+
+  return <div>...</div>;
+};
+```
