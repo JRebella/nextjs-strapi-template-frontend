@@ -40,6 +40,7 @@ const Home: NextPage<{ animalsByTypeQuery: AnimalsByTypeQuery }> = ({
           {animalsByTypeQuery.animalTypes?.data.map(({ attributes }) => {
             return (
               <button
+                className="text-white bg-blue-600 hover:bg-blue-800 p-3 border-2"
                 onClick={() => setCurrentAnimalType(attributes?.name)}
                 key={attributes?.name}
               >
@@ -56,7 +57,9 @@ const Home: NextPage<{ animalsByTypeQuery: AnimalsByTypeQuery }> = ({
               ?.attributes?.animals?.data.map((animal) => {
                 return (
                   <Link key={animal.attributes?.name} href={`/animals/${animal.id}`}>
-                    <button>{animal.attributes?.name}</button>
+                    <button className="text-white bg-green-600 hover:bg-green-800 p-3 border-2">
+                      {animal.attributes?.name}
+                    </button>
                   </Link>
                 );
               })}
@@ -70,6 +73,7 @@ const Home: NextPage<{ animalsByTypeQuery: AnimalsByTypeQuery }> = ({
 export async function getServerSideProps() {
   const { data } = await apolloClient.query<AnimalsByTypeQuery>({
     query: AnimalsByTypeDocument,
+    fetchPolicy: "no-cache",
   });
 
   // Pass data to the page via props
